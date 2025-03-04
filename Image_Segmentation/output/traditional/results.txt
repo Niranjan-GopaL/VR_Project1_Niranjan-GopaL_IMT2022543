@@ -1,0 +1,4 @@
+Traditional Segmentation Results:
+IoU: nan
+Dice Score: nan
+Accuracy: nan

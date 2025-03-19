@@ -75,3 +75,15 @@ Modification made :-
         random_state=42,            # For reproducibility
     ),
 ```
+
+
+# Question D 
+Make U-Net
+Try to make ABANet (research paper that used MSFD)
+> https://github.com/sadjadrz/ABANet-Attention-boundary-aware-network-for-image-segmentation
+
+
+
+
+
+# Question C

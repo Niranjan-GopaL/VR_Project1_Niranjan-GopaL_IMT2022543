@@ -5,6 +5,7 @@
  - Teerth Bhalgat (IMT2022586)
 
  Complete Report :- ![Report](LinkToReportUpdateLater)
+ All Model weights, checkpoints, Model Traning history :- [Google Drive Link to download weights](https://drive.google.com/drive/folders/155lCKD1fDNq2Kq1ZPGncunSYnTp_jycS?usp=drive_link)
 
 ## Introduction
 This project aims to develop robust methods for detecting face masks in images and segmenting the mask regions. We research the most state of the art DL methodes and cost effective traditional methodes for this task.

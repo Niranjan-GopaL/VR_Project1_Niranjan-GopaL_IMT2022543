@@ -172,3 +172,7 @@ cython_debug/
 data
 
 **myenv/
+
+# Models and Checkpoints
+**models/
+**checkpoints/

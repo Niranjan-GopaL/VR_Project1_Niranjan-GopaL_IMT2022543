@@ -115,10 +115,9 @@ For segmentation tasks
 ## How to Run the Code
 1. **Requirements**:
 ```bash
-    pip install -r requirements.txt
-    python classification.py --model [svm|cnn|unet]
-    python segmentation.py --method [threshold|canny|unet]
+    pip install -r requirements.txt 
 ```
+And run the jupyter notebooks provided.
 
 ## Challenges we faced
 When working on optimizing machine learning workflows, we encountered several challenges that required methodical troubleshooting to resolve effectively. Below, we share the issues we faced and the steps we took to overcome them.

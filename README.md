@@ -1,89 +1,144 @@
-# VR_Project1_Niranjan-GopaL_IMT2022543
-Mini Project
+# Face Mask Detection and Segmentation using ML / DL
 
+ - Niranjan Gopal (IMT2022543)
+ - Yash Sengupta  (IMT2022532)
+ - Teerth Bhalgat (IMT2022586)
 
-# EXPLORE A LOT ( cuz we got the freedome to, cuz of LLMs )
+## Introduction
+This project aims to develop robust methods for detecting face masks in images and segmenting the mask regions. We research the most state of the art DL methodes and cost effective traditional methodes for this task.
+The work is divided into four parts:
+1. Binary classification using handcrafted features and machine learning
+2. Binary classification using CNN
+3. Mask segmentation using traditional techniques
+4. Mask segmentation using U-Net architectures
 
+## Dataset
 
-For DL :-
-Hyperparameters :-
-- Number of epochs
-- Learning Rate
-- Batch size
-- Optimizer ( Adam, SGD, RMSprop, Adagrad, Adadelta, Ftrl, AdamW, Nadam  )
-- Initial Learning Rate
-- Number of Layers, Number of Nuerons in a layer ( if you are not using ResNet, FasterRCNN, etc)
-- Activation function in the classification layer
+For face-mask detection the dataset consists of facial images labeled as "with mask" or "without mask". Key details:
+- Source: 
+- Contains RGB images of varying resolutions
+- Split into training (80%) and testing (20%) sets
 
+For segmentation tasks
+- source:
+- 
 
+## Methodology
 
-0. Verify if using hog() in ML part where sir asked to do "Hand crafted feature" :- is this exactl what sir meant ?
-1. tf and pytorch Both version are tried
-2. What each hyper parameter resulted in 
+### Part A: Binary Classification Using Handcrafted Features
+1. **Feature Extraction**:
+   - Used Histogram of Oriented Gradients (HOG) with:
+     - 8 orientations
+     - 8x8 pixels per cell
+     - 2x2 cells per block
+2. **Model Training**:
+   - Evaluated 9 classifiers (SVM, Decision Tree, Random Forest, etc.)
+   - Performed hyperparameter tuning using GridSearchCV/RandomizedSearchCV
+   - Implemented Stacking and Voting ensemble which utilizes top 4 best tuned models from HPO 
 
+### Part B: CNN Classification
+1. **Architecture**:
+   - 3 convolutional layers (32, 64, 128 filters)
+   - Max pooling after each conv layer
+   - Dense layer (128 units) with dropout (0.5)
+   - Sigmoid output
+2. **Training**:
+   - Adam optimizer
+   - Binary cross-entropy loss
+   - 10 epochs, batch size 32
 
+### Part C: Traditional Segmentation
+1. **Techniques**:
+   - Thresholding (global threshold = 127)
+   - Canny edge detection (thresholds = 50, 150)
+2. **Evaluation**:
+   - Dice Coefficient and IoU metrics
+   - Contour extraction for refinement
 
-## These are the Datasets THAT ARE STANDARD BENCHMARKS for ML models
+### Part D: U-Net Segmentation
+1. **Architectures**:
+   - U-Net and U-Net++ variants
+   - Backbones: EfficientNet-b7, ResNet50, VGG19
+2. **Training**:
+   - Standard U-Net training protocol
+   - Evaluated multiple backbones
 
-Catboost argued it's performance superiority via these DatasetBenchmarks against LightGBM, XGBoost, H20.ai
+## Hyperparameters and Experiments
 
-- Adult
-- Amazon
-- Click prediction
-- KDD appetency
-- KDD churn
-- KDD internet
-- KDD upselling
-- KDD 98
-- Kick prediction
+### CNN Classification
+- Learning rate: Default Adam (≈0.001)
+- Batch size: 32
+- Activation: ReLU (hidden), Sigmoid (output)
+- Dropout: 0.5
 
+### U-Net Models
+| Model    | Backbone     | Key Hyperparameters           |
+|----------|--------------|-------------------------------|
+| U-Net    | Efficient-b7 | Pretrained weights, Adam opt  |
+| U-Net++  | ResNet50     | Pretrained weights, Adam opt  |
+| U-Net    | VGG19        | Pretrained weights, Adam opt  |
 
+## Results
 
-## Had to manually compile LightGBM from source code ( compile with flags ) in order to use GPU
+### Classification Performance
+| Model               | Accuracy |
+|---------------------|----------|
+| CNN                 | 97.0%    |
+| Stacking Classifier | 95.0%    |
+| Voting Classifier   | 94.8%    |
+| CatBoost            | 94.5%    |
 
-```sh
-git clone --recursive https://github.com/microsoft/LightGBM
-cd LightGBM
-mkdir build
-cd build
-cmake -DUSE_GPU=1 ..
-make -j4
-cd ../python-package
-python setup.py install
+### Segmentation Performance
+| Method          | Dice   | IoU    |
+|-----------------|--------|--------|
+| Thresholding    | 0.2562 | 0.3080 |
+| U-Net (Eff-b7)  | 0.9447 | 0.8952 |
+
+## Observations and Analysis
+1. **Classification**:
+   - CNN outperformed traditional ML methods by ~2-9%
+   - Ensemble methods provided good alternatives to CNN
+2. **Segmentation**:
+   - Traditional methods were limited by:
+     - Fixed threshold values
+     - Sensitivity to lighting/colors
+   - U-Net achieved superior results (Dice > 0.94)
+3. **Challenges**:
+   - Limited dataset for some mask types
+   - Variability in mask colors/textures
+   - Occlusions and unusual angles
+
+## How to Run the Code
+1. **Requirements**:
+```bash
+    pip install -r requirements.txt
+    python classification.py --model [svm|cnn|unet]
+    python segmentation.py --method [threshold|canny|unet]
 ```
 
-## 
+## Challenges we faced
+When working on optimizing machine learning workflows, we encountered several challenges that required methodical troubleshooting to resolve effectively. Below, we share the issues we faced and the steps we took to overcome them.
 
-However, you're now seeing many warnings about "No further splits with positive gain, best gain: -inf". 
-This indicates that your model is unable to find meaningful splits in the data, which suggests potential issues with:
-- Overfitting
-- Imbalanced classes (which you have: 808 positive vs 295 negative)
+CUDA Out of Memory Errors
+- One of the initial challenges was managing CUDA memory limitations, which often occurred during model training on large datasets. This issue disrupted the training process and required immediate attention. To address it:
+- Reduced Batch Size: we decreased the batch size to --batch_size 16, which significantly lowered memory consumption without compromising training efficiency.
+- Utilized a Smaller Model Backbone: Adopting a lightweight backbone reduced the computational demand on the GPU, ensuring smoother execution.
 
+Poor Segmentation Results
+- While implementing segmentation models, particularly U-Net, we observed suboptimal performance in the form of inaccurate outputs and poor prediction quality. To improve results:
+- Adjusted Threshold Values: Fine-tuning the threshold parameters allowed better discrimination between segmented regions.
+- Experimented with Different Backbones for U-Net: Switching to alternative architectures enhanced feature extraction and improved overall accuracy.
+- Ensured Proper Image Normalization: Correct normalization processes were crucial to maintaining consistent input quality, ultimately boosting model performance.
 
-Modification made :-
-```py
-    'LightGBM': lgb.LGBMClassifier(
-        n_estimators=100,           # Reduced from 200
-        max_depth=4,                # Reduced from 6 
-        learning_rate=0.05,         # Reduced from 0.1
-        min_child_samples=20,       # Minimum samples in a leaf
-        subsample=0.8,              # Use 80% of data for trees
-        colsample_bytree=0.8,       # Use 80% of features per tree
-        class_weight='balanced',    # Handle class imbalance
-        reg_alpha=0.1,              # L1 regularization
-        reg_lambda=0.1,             # L2 regularization
-        random_state=42,            # For reproducibility
-    ),
-```
+Problems while Model Saving and Inferring from Trained Models
+- Another significant challenge arose when saving trained models and using them for inference, especially in cases involving custom architectures. These issues impacted the reproducibility and usability of the trained models. Here's how I resolved them:
+- Model Saving: Ensured consistent serialization and deserialization by using reliable libraries such as torch.save() and torch.load() for PyTorch models. I also checked for version compatibility between the training and deployment environments.
+- Inference Issues: Carefully exported the model to the appropriate format (e.g., ONNX or TensorFlow SavedModel) for compatibility with deployment platforms. This helped mitigate discrepancies during the inference phase.
+- Dependency Conflicts: Verified that all required dependencies were correctly installed and aligned with the framework versions used during training. This step minimized errors due to mismatches in libraries.
+- Input Shape Validation: To prevent runtime errors, I ensured that the input data during inference matched the expected shapes and preprocessing steps used during training.
 
 
-# Question D 
-Make U-Net
-Try to make ABANet (research paper that used MSFD)
-> https://github.com/sadjadrz/ABANet-Attention-boundary-aware-network-for-image-segmentation
+Installation Issues
+- Setting up the environment presented difficulties due to conflicting dependencies or outdated versions.
+- Pip Vs Conda: Tensorflow officially only releases on PyPi channels and does not support conda; meanwhile Ubuntu 24.04 had strange policies regarding system-wide python installation and suggested usage of conda.
 
-
-
-
-
-# Question C

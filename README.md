@@ -94,6 +94,8 @@ For segmentation tasks
 | Thresholding    | 0.2562 | 0.3080 |
 | U-Net (Eff-b7)  | 0.9447 | 0.8952 |
 
+![Unet Segmentation](./assets/results_of_best_unet.png)
+
 ## Observations and Analysis
 1. **Classification**:
    - CNN outperformed traditional ML methods by ~2-9%
@@ -142,3 +144,8 @@ Installation Issues
 - Setting up the environment presented difficulties due to conflicting dependencies or outdated versions.
 - Pip Vs Conda: Tensorflow officially only releases on PyPi channels and does not support conda; meanwhile Ubuntu 24.04 had strange policies regarding system-wide python installation and suggested usage of conda.
 
+## Important Advanced things that we are trying 
+
+- GPU enabled training of scikit learn models ( according to 2025 Google's latest Colab ; Cuda introduced new )
+- ABBANet ( the author of MSFD dataset provided a model that out-performs every other model )
+- Google drive link of all the train model to run inference on.

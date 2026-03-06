@@ -5,7 +5,7 @@
  - Yash Sengupta  (IMT2022532)
  - Teerth Bhalgat (IMT2022586)
 
- > - Complete Report :- ![Report](./assets/FaceMaskDetection_and_Segmentation_Report.pdf)
+ >  - > - Complete Report :- [Download/View PDF Report](./assets/FaceMaskDetection_and_Segmentation_Report.pdf)
  > - All Model weights, checkpoints, Model Traning history :- [Google Drive Link to download weights](https://drive.google.com/drive/folders/155lCKD1fDNq2Kq1ZPGncunSYnTp_jycS?usp=drive_link)
 
 ## Introduction
